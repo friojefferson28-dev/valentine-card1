@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Be My Valentine 💘</title>
+
 <style>
   body {
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -15,6 +16,7 @@
     margin: 0;
     overflow: hidden;
   }
+
   .card {
     background: white;
     padding: 30px;
@@ -27,9 +29,18 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    z-index: 1;
   }
+
   h1 { color: #ff4d6d; margin-bottom: 10px; font-size: 24px; min-height: 60px; }
-  img { width: 180px; height: 180px; object-fit: contain; margin: 10px 0; }
+
+  img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    margin: 10px 0;
+  }
+
   .btn-wrapper {
     display: flex;
     gap: 15px;
@@ -39,6 +50,7 @@
     width: 100%;
     height: 120px; 
   }
+
   button {
     padding: 12px 0;
     width: 130px; 
@@ -49,54 +61,103 @@
     font-weight: bold;
     transition: transform 0.2s ease; 
   }
-  #yes { background: #ff4d6d; color: white; z-index: 100; }
-  #no { background: #ddd; color: #555; z-index: 50; }
+
+  #yes {
+    background: #ff4d6d;
+    color: white;
+    z-index: 100;
+  }
+
+  #no {
+    background: #ddd;
+    color: #555;
+    z-index: 50;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
-<audio id="music" loop><source src="paraluman.mp3" type="audio/mpeg"></audio>
+
+<audio id="music" loop>
+  <source src="paraluman.mp3" type="audio/mpeg">
+</audio>
+
 <div class="card" id="main-card">
   <h1 id="text">Will you be my Valentine? 💕</h1>
-  <img id="image" src="cute1.jpg">
+  <img id="image" src="cute1.png.jpg">
+  
   <div class="btn-wrapper">
     <button id="yes" onclick="yesClick()">Yes 💖</button>
     <button id="no" onclick="teleportNo()">No 💔</button>
   </div>
 </div>
+
 <script>
   let noCount = 0;
   let yesScale = 1;
   let noScale = 1;
-  const texts = ["Are you sure? 🥺", "Really sure?? 😳", "Think again pls 😭", "Please say yes... 😔"];
-  const images = ["cute1.jpg", "cute2.jpg", "cute3.jpg", "cute4.jpg"];
+
+  const texts = [
+    "Are you sure? 🥺", 
+    "Really sure?? 😳", 
+    "Think again pls 😭", 
+    "Please say yes... 😔",
+    "You're heartless! 😂",
+    "I'm gonna cry... 💔"
+  ];
+  
+  // Array updated to match the .png.jpg names from your screenshot
+  const images = [
+    "cute1.png.jpg", 
+    "cute2.png.jpg", 
+    "cute3.png.jpg", 
+    "cute4.png.jpg"
+  ];
 
   function teleportNo() {
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const imgElem = document.getElementById("image");
+    const textElem = document.getElementById("text");
+
     noCount++;
+    
+    // Yes button grows, No button shrinks
     yesScale += 0.4; 
     noScale -= 0.1;  
     if (noScale < 0.4) noScale = 0.4; 
+    
     yesBtn.style.transform = `scale(${yesScale})`;
     noBtn.style.transform = `scale(${noScale})`;
-    const p = 100;
-    const x = Math.max(p, Math.floor(Math.random() * (window.innerWidth - noBtn.offsetWidth - p)));
-    const y = Math.max(p, Math.floor(Math.random() * (window.innerHeight - noBtn.offsetHeight - p)));
+
+    // Random teleportation logic
+    const padding = 100;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    
+    const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+    const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+    
     noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-    document.getElementById("text").innerText = texts[Math.min(noCount - 1, texts.length - 1)];
-    document.getElementById("image").src = images[Math.min(noCount, images.length - 1)];
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+
+    // Update Text and Images in order
+    textElem.innerText = texts[Math.min(noCount - 1, texts.length - 1)];
+    imgElem.src = images[Math.min(noCount, images.length - 1)];
   }
 
   function yesClick() {
-    document.getElementById("music").play();
+    const music = document.getElementById("music");
+    music.play().catch(() => console.log("Music play failed - click Yes again!"));
+
     document.getElementById("main-card").innerHTML = `
         <h1 style="font-size: 32px;">YAYYYY! 💘</h1>
         <p style="font-size: 18px;">I knew you'd say yes! 😉❤️</p>
-        <img src="cute4.jpg" style="width: 220px; height: 220px;">
+        <img src="cute4.png.jpg" style="width: 220px; height: 220px;">
     `;
   }
 </script>
+
 </body>
 </html>
