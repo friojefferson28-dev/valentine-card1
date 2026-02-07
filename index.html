@@ -54,9 +54,7 @@
   #no { background: #ddd; color: #555; z-index: 50; }
 </style>
 </head>
-<body>
-
-<audio id="music" loop>
+<body onclick="startMusic()"> <audio id="music" loop>
   <source src="paraluman.mp3.mp3" type="audio/mpeg">
 </audio>
 
@@ -73,51 +71,53 @@
 <script>
   let noCount = 0;
   let yesScale = 1;
+  let musicStarted = false;
+  const music = document.getElementById("music");
 
-  const texts = [
-    "Are you sure? 🥺", 
-    "Really sure?? 😳", 
-    "Think again pls 😭", 
-    "YOU HAVE NO CHOICE! 😈"
-  ];
-  
-  // Matches the filenames in your screenshot
-  const images = [
-    "cute1.png.jpg", 
-    "cute2.png.jpg", 
-    "cute3.png.jpg", 
-    "cute4.png.jpg"
-  ];
+  // Attempt to play as soon as script loads
+  window.addEventListener('load', () => {
+    startMusic();
+  });
+
+  function startMusic() {
+    if (!musicStarted) {
+      music.play().then(() => {
+        musicStarted = true;
+      }).catch(() => {
+        console.log("Autoplay blocked. Waiting for user interaction...");
+      });
+    }
+  }
+
+  const texts = ["Are you sure? 🥺", "Really sure?? 😳", "Think again pls 😭", "YOU HAVE NO CHOICE! 😈"];
+  const images = ["cute1.png.jpg", "cute2.png.jpg", "cute3.png.jpg", "cute4.png.jpg"];
 
   function teleportNo() {
+    startMusic(); // Ensure music starts on interaction
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const imgElem = document.getElementById("image");
     const textElem = document.getElementById("text");
 
     noCount++;
-    
     if (noCount <= 3) {
-        yesScale += 1.8; // Growing faster to be more dramatic
+        yesScale += 1.8; 
         yesBtn.style.transform = `scale(${yesScale})`;
-
         const padding = 100;
         const maxX = window.innerWidth - noBtn.offsetWidth - padding;
         const maxY = window.innerHeight - noBtn.offsetHeight - padding;
         const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
         const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-        
         noBtn.style.position = "fixed";
         noBtn.style.left = randomX + "px";
         noBtn.style.top = randomY + "px";
-
         textElem.innerText = texts[noCount - 1];
         imgElem.src = images[Math.min(noCount, 3)];
     } 
     
     if (noCount === 4) {
         textElem.innerText = texts[3];
-        yesBtn.style.transform = `scale(60)`; // Covers screen
+        yesBtn.style.transform = `scale(60)`; 
         yesBtn.style.position = "fixed";
         yesBtn.style.left = "50%";
         yesBtn.style.top = "50%";
@@ -128,9 +128,7 @@
   }
 
   function yesClick() {
-    const music = document.getElementById("music");
-    music.play().catch(() => console.log("Music failed"));
-
+    startMusic(); // Ensure music starts on interaction
     const yesBtn = document.getElementById("yes");
     yesBtn.style.transform = "scale(1)";
     yesBtn.style.position = "static";
@@ -143,6 +141,5 @@
     `;
   }
 </script>
-
 </body>
 </html>
