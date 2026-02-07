@@ -48,9 +48,9 @@
     border-radius: 12px;
     cursor: pointer;
     font-weight: bold;
-    transition: transform 0.2s ease; 
+    transition: transform 0.3s ease; /* Smoother growth */
   }
-  #yes { background: #ff4d6d; color: white; z-index: 100; }
+  #yes { background: #ff4d6d; color: white; z-index: 999; position: relative; }
   #no { background: #ddd; color: #555; z-index: 50; }
 </style>
 </head>
@@ -78,12 +78,9 @@
     "Are you sure? 🥺", 
     "Really sure?? 😳", 
     "Think again pls 😭", 
-    "Please say yes... 😔",
-    "You're heartless! 😂",
-    "I'm gonna cry... 💔"
+    "YOU HAVE NO CHOICE! 😈"
   ];
-
-  // Array updated to match your exact GitHub file names
+  
   const images = [
     "cute1.png.jpg", 
     "cute2.png.jpg", 
@@ -99,26 +96,52 @@
 
     noCount++;
     
-    yesScale += 0.4; 
-    yesBtn.style.transform = `scale(${yesScale})`;
+    if (noCount <= 3) {
+        // Regular Growth for first 3 clicks
+        yesScale += 1.5; 
+        yesBtn.style.transform = `scale(${yesScale})`;
 
-    const padding = 100;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-    const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-    const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+        // Teleport No Button
+        const padding = 100;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+        
+        noBtn.style.position = "fixed";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+
+        // Update Content
+        textElem.innerText = texts[noCount - 1];
+        imgElem.src = images[Math.min(noCount, 3)];
+    } 
     
-    noBtn.style.position = "fixed";
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-
-    textElem.innerText = texts[Math.min(noCount - 1, texts.length - 1)];
-    imgElem.src = images[Math.min(noCount, images.length - 1)];
+    if (noCount === 4) {
+        // 4th Click: The "Big" Surprise
+        textElem.innerText = texts[3];
+        // Scale to 50x to cover the screen
+        yesBtn.style.transform = `scale(50)`; 
+        yesBtn.style.position = "fixed";
+        yesBtn.style.left = "50%";
+        yesBtn.style.top = "50%";
+        yesBtn.style.marginLeft = "-65px"; // Half of button width
+        yesBtn.style.marginTop = "-21px";  // Half of button height
+        
+        // Hide the No button entirely
+        noBtn.style.display = "none";
+    }
   }
 
   function yesClick() {
     const music = document.getElementById("music");
-    music.play().catch(() => console.log("Music failed"));
+    music.play().catch(() => console.log("Music play failed"));
+
+    // Reset styles in case it was clicked while huge
+    const yesBtn = document.getElementById("yes");
+    yesBtn.style.transform = "scale(1)";
+    yesBtn.style.position = "static";
+    yesBtn.style.margin = "0";
 
     document.getElementById("main-card").innerHTML = `
         <h1 style="font-size: 32px;">YAYYYY! 💘</h1>
