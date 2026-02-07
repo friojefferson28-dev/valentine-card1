@@ -48,7 +48,7 @@
     border-radius: 12px;
     cursor: pointer;
     font-weight: bold;
-    transition: transform 0.3s ease; /* Smoother growth */
+    transition: transform 0.3s ease;
   }
   #yes { background: #ff4d6d; color: white; z-index: 999; position: relative; }
   #no { background: #ddd; color: #555; z-index: 50; }
@@ -81,6 +81,7 @@
     "YOU HAVE NO CHOICE! 😈"
   ];
   
+  // Matches the filenames in your screenshot
   const images = [
     "cute1.png.jpg", 
     "cute2.png.jpg", 
@@ -97,11 +98,9 @@
     noCount++;
     
     if (noCount <= 3) {
-        // Regular Growth for first 3 clicks
-        yesScale += 1.5; 
+        yesScale += 1.8; // Growing faster to be more dramatic
         yesBtn.style.transform = `scale(${yesScale})`;
 
-        // Teleport No Button
         const padding = 100;
         const maxX = window.innerWidth - noBtn.offsetWidth - padding;
         const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -112,32 +111,26 @@
         noBtn.style.left = randomX + "px";
         noBtn.style.top = randomY + "px";
 
-        // Update Content
         textElem.innerText = texts[noCount - 1];
         imgElem.src = images[Math.min(noCount, 3)];
     } 
     
     if (noCount === 4) {
-        // 4th Click: The "Big" Surprise
         textElem.innerText = texts[3];
-        // Scale to 50x to cover the screen
-        yesBtn.style.transform = `scale(50)`; 
+        yesBtn.style.transform = `scale(60)`; // Covers screen
         yesBtn.style.position = "fixed";
         yesBtn.style.left = "50%";
         yesBtn.style.top = "50%";
-        yesBtn.style.marginLeft = "-65px"; // Half of button width
-        yesBtn.style.marginTop = "-21px";  // Half of button height
-        
-        // Hide the No button entirely
+        yesBtn.style.marginLeft = "-65px"; 
+        yesBtn.style.marginTop = "-21px";  
         noBtn.style.display = "none";
     }
   }
 
   function yesClick() {
     const music = document.getElementById("music");
-    music.play().catch(() => console.log("Music play failed"));
+    music.play().catch(() => console.log("Music failed"));
 
-    // Reset styles in case it was clicked while huge
     const yesBtn = document.getElementById("yes");
     yesBtn.style.transform = "scale(1)";
     yesBtn.style.position = "static";
@@ -146,7 +139,7 @@
     document.getElementById("main-card").innerHTML = `
         <h1 style="font-size: 32px;">YAYYYY! 💘</h1>
         <p style="font-size: 18px;">I knew you'd say yes! 😉❤️</p>
-        <img src="cute4.png.jpg" style="width: 220px;">
+        <img src="cute5.png.jpg" style="width: 250px; height: 250px;">
     `;
   }
 </script>
